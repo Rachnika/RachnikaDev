@@ -2,6 +2,7 @@
 
 import "./globals.css";
 import {Assistant} from 'next/font/google' // set font name 
+import { ToastContainer } from "react-toastify";
 
 
 // font setup 
@@ -23,6 +24,7 @@ export default function RootLayout({ children }) {
       <body
         className={`${assistantFont.className} antialiased`}
       >
+        <ToastContainer/>
         {children}
       </body>
     </html>

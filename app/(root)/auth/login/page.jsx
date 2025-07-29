@@ -23,10 +23,16 @@ import { FaRegEyeSlash } from "react-icons/fa6";
 import { FaRegEye } from "react-icons/fa6";
 import Link from "next/link";
 import { WEBSITE_REGISTER } from "@/routes/WebsiteRoute";
+import axios from "axios";
+import { showToast } from "@/lib/showToast";
+
+import OTPVerification from "@/components/Application/OTPVerification";
 
 const LoginPage = () => {
   const [loading, setLoading] = useState(false);
+  const [otpVerificationLoading, setOtpVerificationLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(true);
+  const [otpEmail, setOtpEmail] = useState();
   // define form schema using zod
   const formSchema = zSchema
     .pick({
@@ -48,8 +54,59 @@ const LoginPage = () => {
 
   // handle form submission
   const handleLoginSubmit = async (values) => {
-    console.log("Form submitted with values:", values);
+    try {
+      setLoading(true);
+      // make API call to login user
+      // Assuming the API endpoint is /api/auth/login
+      const { data: loginResponse } = await axios.post(
+        "/api/auth/login",
+        values
+      );
+      if (!loginResponse.success) {
+        throw new Error(loginResponse.message);
+      }
+
+
+      setOtpEmail(values.email);
+
+      // Reset the form after successful registration
+      form.reset();
+      // alert(registerResponse.message);
+      // Show success toast
+      showToast("success", loginResponse.message);
+    } catch (error) {
+      // alert(error.message);
+      // Show error toast
+      showToast("error", error.message);
+    } finally {
+      // Reset loading state
+      setLoading(false);
+    }
   };
+
+
+  // handle OTP verification
+  const handleOtpVerification = async (values) => {
+
+    try {
+      setOtpVerificationLoading(true);
+      const { data: otpResponse } = await axios.post(
+        "/api/auth/verify-otp",
+        values
+      );
+      if (!otpResponse.success) {
+        throw new Error(otpResponse.message);
+      }
+      setOtpEmail('');
+      showToast("success", otpResponse.message);
+    } catch (error) {
+      showToast("error", error.message);
+    } finally {
+      setOtpVerificationLoading(false);
+    }
+
+
+  }
 
   return (
     <Card className="w-[400px]">
@@ -64,8 +121,10 @@ const LoginPage = () => {
             className="max-w-[150px]"
           />
         </div>
-
-        <div className="text-center">
+      {
+        !otpEmail ? 
+        <>
+          <div className="text-center">
           <h1 className="text-3xl font-semibold">Login Into Account</h1>
           <p>Login into your account by filling out the form below</p>
         </div>
@@ -133,7 +192,10 @@ const LoginPage = () => {
               <div className="text-center">
                 <div className="flex items-center justify-center gap-2">
                   <p>Don't have an account ?</p>
-                  <Link href={WEBSITE_REGISTER} className="text-primary underline">
+                  <Link
+                    href={WEBSITE_REGISTER}
+                    className="text-primary underline"
+                  >
                     Create Account
                   </Link>
                 </div>
@@ -147,6 +209,14 @@ const LoginPage = () => {
             </form>
           </Form>
         </div>
+        
+        </>
+        :
+        <OTPVerification email={otpEmail} onSubmit={handleOtpVerification} loading={otpVerificationLoading} />
+      }
+
+
+        
       </CardContent>
     </Card>
   );

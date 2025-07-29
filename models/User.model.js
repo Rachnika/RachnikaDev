@@ -27,7 +27,8 @@ const userSchema = new mongoose.Schema(
       required: true,
       minlength: 8,
       maxlength: 64,
-      select: false,
+      trim: true,
+      select: false, // Do not return password in queries
     },
     avatar: {
       url: {
