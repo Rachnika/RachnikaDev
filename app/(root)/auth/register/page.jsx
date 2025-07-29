@@ -23,6 +23,7 @@ import { FaRegEyeSlash } from "react-icons/fa6";
 import { FaRegEye } from "react-icons/fa6";
 import Link from "next/link";
 import { WEBSITE_LOGIN } from "@/routes/WebsiteRoute";
+import axios from "axios";
 
 const RegisterPage = () => {
   const [loading, setLoading] = useState(false);
@@ -57,7 +58,26 @@ const RegisterPage = () => {
 
   // handle form submission
   const handleRegisterSubmit = async (values) => {
-    console.log("Form submitted with values:", values);
+    try {
+      setLoading(true);
+      // make API call to register user
+      // Assuming the API endpoint is /api/auth/register
+      const { data: registerResponse } = await axios.post(
+        "/api/auth/register",
+        values
+      );
+      if (!registerResponse.success) {
+        throw new Error(registerResponse.message);
+      }
+      // Reset the form after successful registration
+      form.reset();
+      alert(registerResponse.message);
+    } catch (error) {
+      alert(error.message);
+    } finally {
+      // Reset loading state
+      setLoading(false);
+    }
   };
 
   return (
@@ -91,7 +111,11 @@ const RegisterPage = () => {
                       <FormItem>
                         <FormLabel>Full Name </FormLabel>
                         <FormControl>
-                          <Input type="text" placeholder="Enter your name" {...field} />
+                          <Input
+                            type="text"
+                            placeholder="Enter your name"
+                            {...field}
+                          />
                         </FormControl>
 
                         <FormMessage />
