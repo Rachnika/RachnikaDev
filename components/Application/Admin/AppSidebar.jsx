@@ -1,11 +1,7 @@
 "use client";
-import React from "react";
 import {
   Sidebar,
   SidebarContent,
-  SidebarGroup,
-  SidebarGroupContent,
-  SidebarGroupLabel,
   SidebarHeader,
   SidebarMenu,
   SidebarMenuButton,
@@ -13,6 +9,7 @@ import {
   SidebarMenuSub,
   SidebarMenuSubButton,
   SidebarMenuSubItem,
+  useSidebar,
 } from "@/components/ui/sidebar";
 import Image from "next/image";
 import logoBlack from '@/public/assets/images/Rachnika_Logo.png';
@@ -25,15 +22,18 @@ import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/component
 import Link from "next/link";
 
 const AppSideBar = () => {
+    const {toggleSidebar}=useSidebar()
   return (
-    <Sidebar>
+    <Sidebar className="z-50">
       <SidebarHeader className="border-b h-20 p-0">
         <div className="flex justify-between items-center px-4">
             <Image src={logoBlack.src} height={50} width={logoBlack.width} className="block dark:hidden h-[100px] w-auto" alt="logo-black"/>
             <Image src={logoWhite.src} height={50} width={logoWhite.width} className="hidden dark:block h-[100px] w-auto" alt="logo-white"/>
-            <Button type="button" size="icon" className="">
+            
+            <Button onClick={toggleSidebar} type="button" size="icon" className="md:hidden">
                 <IoMdClose/>
             </Button>
+            
         </div>
       </SidebarHeader>
 
@@ -44,6 +44,7 @@ const AppSideBar = () => {
                     <SidebarMenuItem>
                         <CollapsibleTrigger asChild> 
                             <SidebarMenuButton asChild className="font-semibold px-2 py-5">
+                    
                                 <Link href={menu?.url}>
                                     <menu.icon/> 
                                     {menu.titie}
@@ -52,6 +53,7 @@ const AppSideBar = () => {
                                         <LuChevronRight className="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90"/>
                                     }
                                 </Link>
+                                
                             </SidebarMenuButton>
                         </CollapsibleTrigger>
                         
