@@ -3,3 +3,8 @@ export const WEBSITE_LOGIN = '/auth/login';
 export const WEBSITE_REGISTER = '/auth/register';
 export const WEBSITE_RESETPASSWORD = '/auth/reset-password';
 
+
+// User Routes
+
+export const USER_DASHBOARD='/my-account'
+
