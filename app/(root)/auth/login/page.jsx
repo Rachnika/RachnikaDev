@@ -22,7 +22,7 @@ import { z } from "zod";
 import { FaRegEyeSlash } from "react-icons/fa6";
 import { FaRegEye } from "react-icons/fa6";
 import Link from "next/link";
-import { WEBSITE_REGISTER } from "@/routes/WebsiteRoute";
+import { WEBSITE_REGISTER, WEBSITE_RESETPASSWORD } from "@/routes/WebsiteRoute";
 import axios from "axios";
 import { showToast } from "@/lib/showToast";
 
@@ -209,7 +209,7 @@ const LoginPage = () => {
               </div>
 
               <div className="text-center mt-3">
-                <Link href="" className="text-primary underline">
+                <Link href={WEBSITE_RESETPASSWORD} className="text-primary underline">
                   Forgot Password?
                 </Link>
               </div>

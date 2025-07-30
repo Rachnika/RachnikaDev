@@ -28,8 +28,8 @@ export default function RootLayout({ children }) {
 
       <GlobalProvider>
       
-      <ToastContainer/>
-        {children}
+        <ToastContainer/>
+          {children}
       </GlobalProvider>
         
       </body>
