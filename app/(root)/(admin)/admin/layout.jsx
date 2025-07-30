@@ -1,10 +1,14 @@
+import AppSideBar from '@/components/Application/Admin/AppSidebar'
+import { SidebarProvider } from '@/components/ui/sidebar'
 import React from 'react'
 
 const layout = ({children}) => {
   return (
-    <div>
-      {children}
-    </div>
+    <SidebarProvider>
+        <AppSideBar/>
+        <main>{children}</main>
+    </SidebarProvider>
+    
   )
 }
 
