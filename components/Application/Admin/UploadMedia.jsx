@@ -5,7 +5,7 @@ import axios from 'axios';
 import { CldUploadWidget } from 'next-cloudinary';
 import { FiPlus } from "react-icons/fi";
 
-const UploadMedia = ({isMultiple}) => {
+const UploadMedia = ({isMultiple,queryClient}) => {
 
     const handleOnError=(error)=>{
         showToast("error",error.statusText)
@@ -25,10 +25,7 @@ const UploadMedia = ({isMultiple}) => {
             thumbnail_url:file.uploadInfo.thumbnail_url
         }))
 
-        console.log("this is uploadedFiles Data",uploadedFiles)
-
         if(uploadedFiles.length>0){
-            console.log("this is if block section calling.")
             
             try {
                 const {data:mediaUploadResponse} = await axios.post('/api/media/create',uploadedFiles)
@@ -37,6 +34,7 @@ const UploadMedia = ({isMultiple}) => {
                     throw new Error(mediaUploadResponse.message)
                 }
 
+                queryClient.invalidateQueries(['media-data'])
                 showToast('success',mediaUploadResponse.message)
                 
             } catch (error) {
