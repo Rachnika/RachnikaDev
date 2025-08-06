@@ -8,7 +8,7 @@ import { ADMIN_CATEGORY_ADD, ADMIN_CATEGORY_EDIT, ADMIN_CATEGORY_SHOW, ADMIN_DAS
 import DatatableWrapper from "@/components/Application/Admin/DatatableWrapper";
 import { useCallback, useMemo } from "react";
 import { columnConfig } from "@/lib/helperFunction";
-import { DT_CATEGORY_COLUMN } from "@/lib/column";
+import { DT_CATEGORY_COLUMN, DT_PRODUCT_COLUMN } from "@/lib/column";
 import EditAction from "@/components/Application/Admin/EditAction";
 import DeleteAction from "@/components/Application/Admin/DeleteAction";
 import { useSearchParams } from "next/navigation";
@@ -28,7 +28,14 @@ const TRASH_CONFIG={
     fetchUrl:'/api/category',
     exportUrl:'/api/category/export',
     deleteUrl:'/api/category/delete'
-  }
+  },
+  product:{
+    title:'Product Trash',
+    columns:DT_PRODUCT_COLUMN,
+    fetchUrl:'/api/product',
+    exportUrl:'/api/product/export',
+    deleteUrl:'/api/product/delete'
+  },
 }
 
 

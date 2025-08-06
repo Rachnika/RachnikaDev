@@ -40,7 +40,7 @@ const MediaPage = () => {
   }, [searchParams]);
 
   const fetchMedia = async (page, deleteType) => {
-    const { data:response } = await axios.get(
+    const { data: response } = await axios.get(
       `/api/media?page=${page}&&limit=10&&deleteType=${deleteType}`
     );
 
@@ -119,49 +119,48 @@ const MediaPage = () => {
           </div>
         </CardHeader>
         <CardContent className="pb-5">
-        {selectedMedia.length > 0 && (
-          <div className="py-2 px-3 bg-violet-200 mb-2 rounded flex justify-between items-center">
-            <Label>
-              <Checkbox
-                checked={selectAll}
-                onCheckedChange={handleSelectAll}
-                className="border-primary cursor-pointer"
-              />
-              Select All
-            </Label>
+          {selectedMedia.length > 0 && (
+            <div className="py-2 px-3 bg-violet-200 mb-2 rounded flex justify-between items-center">
+              <Label>
+                <Checkbox
+                  checked={selectAll}
+                  onCheckedChange={handleSelectAll}
+                  className="border-primary cursor-pointer"
+                />
+                Select All
+              </Label>
 
-            <div className="flex gap-2">
-              {deleteType === "SD" ? (
-                <Button
-                  className="cursor-pointer"
-                  variant="destructive"
-                  onClick={() => handleDelete(selectedMedia, deleteType)}
-                >
-                  Move Into Trash
-                </Button>
-              ) : (
-                <>
-                  <Button
-                    className="bg-green-500 hover:bg-green-600 cursor-pointer"
-                    onClick={() => handleDelete(selectedMedia, "RSD")}
-                  >
-                    Restore
-                  </Button>
-
+              <div className="flex gap-2">
+                {deleteType === "SD" ? (
                   <Button
                     className="cursor-pointer"
                     variant="destructive"
                     onClick={() => handleDelete(selectedMedia, deleteType)}
                   >
-                    Delete Permanent
+                    Move Into Trash
                   </Button>
-                </>
-              )}
-            </div>
-          </div>
-        )}
+                ) : (
+                  <>
+                    <Button
+                      className="bg-green-500 hover:bg-green-600 cursor-pointer"
+                      onClick={() => handleDelete(selectedMedia, "RSD")}
+                    >
+                      Restore
+                    </Button>
 
-        
+                    <Button
+                      className="cursor-pointer"
+                      variant="destructive"
+                      onClick={() => handleDelete(selectedMedia, deleteType)}
+                    >
+                      Delete Permanent
+                    </Button>
+                  </>
+                )}
+              </div>
+            </div>
+          )}
+
           {status === "pending" ? (
             <div>Loading...</div>
           ) : status === "error" ? (
