@@ -8,7 +8,7 @@ import { ADMIN_CATEGORY_ADD, ADMIN_CATEGORY_EDIT, ADMIN_CATEGORY_SHOW, ADMIN_DAS
 import DatatableWrapper from "@/components/Application/Admin/DatatableWrapper";
 import { useCallback, useMemo } from "react";
 import { columnConfig } from "@/lib/helperFunction";
-import { DT_CATEGORY_COLUMN, DT_PRODUCT_COLUMN, DT_PRODUCT_VARIANT_COLUMN } from "@/lib/column";
+import { DT_CATEGORY_COLUMN, DT_COUPON_COLUMN, DT_PRODUCT_COLUMN, DT_PRODUCT_VARIANT_COLUMN } from "@/lib/column";
 import EditAction from "@/components/Application/Admin/EditAction";
 import DeleteAction from "@/components/Application/Admin/DeleteAction";
 import { useSearchParams } from "next/navigation";
@@ -42,6 +42,13 @@ const TRASH_CONFIG={
     fetchUrl:'/api/product-variant',
     exportUrl:'/api/product-variant/export',
     deleteUrl:'/api/product-variant/delete'
+  },
+  coupon:{
+    title:'Coupon Trash',
+    columns:DT_COUPON_COLUMN,
+    fetchUrl:'/api/coupon',
+    exportUrl:'/api/coupon/export',
+    deleteUrl:'/api/coupon/delete'
   },
 }
 
