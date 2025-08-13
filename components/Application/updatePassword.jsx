@@ -21,6 +21,7 @@ import axios from "axios";
 import { showToast } from "@/lib/showToast";
 import { useRouter } from "next/navigation";
 import { WEBSITE_LOGIN } from "@/routes/WebsiteRoute";
+import { Button } from "../ui/button";
 
 const UpdatePassword = ({email}) => {
 
@@ -112,13 +113,13 @@ const UpdatePassword = ({email}) => {
                             {...field}
                           />
                         </FormControl>
-                        <button
+                        <Button
                           className="absolute top-1/2 right-2 cursor-pointer"
                           type="button"
                           onClick={() => setShowPassword(!showPassword)}
                         >
                           {showPassword ? <FaRegEyeSlash /> : <FaRegEye />}
-                        </button>
+                        </Button>
 
                         <FormMessage />
                       </FormItem>
@@ -140,7 +141,7 @@ const UpdatePassword = ({email}) => {
                             {...field}
                           />
                         </FormControl>
-                        <button
+                        <Button
                           className="absolute top-1/2 right-2 cursor-pointer"
                           type="button"
                           onClick={() =>
@@ -152,7 +153,7 @@ const UpdatePassword = ({email}) => {
                           ) : (
                             <FaRegEye />
                           )}
-                        </button>
+                        </Button>
 
                         <FormMessage />
                       </FormItem>

@@ -25,6 +25,7 @@ import Link from "next/link";
 import { WEBSITE_LOGIN } from "@/routes/WebsiteRoute";
 import axios from "axios";
 import { showToast } from "@/lib/showToast";
+import { Button } from "@/components/ui/button";
 
 const RegisterPage = () => {
   const [loading, setLoading] = useState(false);
@@ -162,13 +163,13 @@ const RegisterPage = () => {
                             {...field}
                           />
                         </FormControl>
-                        <button
+                        <Button
                           className="absolute top-1/2 right-2 cursor-pointer"
                           type="button"
                           onClick={() => setShowPassword(!showPassword)}
                         >
                           {showPassword ? <FaRegEyeSlash /> : <FaRegEye />}
-                        </button>
+                        </Button>
 
                         <FormMessage />
                       </FormItem>
@@ -190,7 +191,7 @@ const RegisterPage = () => {
                             {...field}
                           />
                         </FormControl>
-                        <button
+                        <Button
                           className="absolute top-1/2 right-2 cursor-pointer"
                           type="button"
                           onClick={() =>
@@ -202,7 +203,7 @@ const RegisterPage = () => {
                           ) : (
                             <FaRegEye />
                           )}
-                        </button>
+                        </Button>
 
                         <FormMessage />
                       </FormItem>

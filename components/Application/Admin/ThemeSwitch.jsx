@@ -15,7 +15,7 @@ const ThemeSwitch = () => {
     const { setTheme } = useTheme()
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger>
+      <DropdownMenuTrigger asChild>
         <Button type="button" variant="ghost" className="cursor-pointer">
            <GoSun className="dark:hidden"/>
            <FiMoon className="hidden dark:block"/> 

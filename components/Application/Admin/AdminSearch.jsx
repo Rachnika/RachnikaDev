@@ -3,6 +3,7 @@ import { Input } from '@/components/ui/input'
 import React, { useState } from 'react'
 import { FiSearch } from "react-icons/fi";
 import SearchModel from './SearchModel';
+import { Button } from '@/components/ui/button';
 
 const AdminSearch = () => {
 
@@ -18,9 +19,9 @@ const AdminSearch = () => {
                 onClick={()=>setOpen(true)}
             />
 
-            <button type='button' className='absolute right-3 cursor-default'>
+            <Button type='button' className='absolute right-3 cursor-default'>
                 <FiSearch />  
-            </button>
+            </Button>
         </div>
 
         <SearchModel open={open} setOpen={setOpen} /> 

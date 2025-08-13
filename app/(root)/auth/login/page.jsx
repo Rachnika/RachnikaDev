@@ -31,6 +31,7 @@ import { useDispatch } from "react-redux";
 import { login } from "@/store/reducer/authReducer";
 import { useRouter, useSearchParams } from "next/navigation";
 import { ADMIN_DASHBOARD } from "@/routes/AdminPanelRoute";
+import { Button } from "@/components/ui/button";
 
 
 const LoginPage = () => {
@@ -184,13 +185,13 @@ const LoginPage = () => {
                           {...field}
                         />
                       </FormControl>
-                      <button
+                      <Button
                         className="absolute top-1/2 right-2 cursor-pointer"
                         type="button"
                         onClick={() => setShowPassword(!showPassword)}
                       >
                         {showPassword ? <FaRegEyeSlash /> : <FaRegEye />}
-                      </button>
+                      </Button>
 
                       <FormMessage />
                     </FormItem>

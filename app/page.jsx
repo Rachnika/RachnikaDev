@@ -4,7 +4,7 @@ import React from 'react'
 const page = () => {
   return (
     <div>
-      <Button>Sadcn</Button>
+      <p>This is web.</p>
     </div>
   )
 }

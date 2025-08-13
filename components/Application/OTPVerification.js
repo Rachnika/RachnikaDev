@@ -23,6 +23,7 @@ import {
   InputOTPGroup,
   InputOTPSlot,
 } from "@/components/ui/input-otp";
+import { Button } from "../ui/button";
 
 const OTPVerification = ({ email, onSubmit, loading }) => {
   const [isResendOtp, setIsResendOtp] = useState(false);
@@ -120,14 +121,14 @@ const OTPVerification = ({ email, onSubmit, loading }) => {
             />
 
             <div className="text-center mt-5">
-              <button
+              <Button
                 onClick={handleResendOtp}
                 type="button"
                 className="text-blue-500 cursor-pointer hover:underline"
                 disabled={isResendOtp}
               >
                 {isResendOtp ? "Resending..." : "Resend OTP"}
-              </button>
+              </Button>
             </div>
           </div>
         </form>
