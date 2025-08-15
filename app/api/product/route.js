@@ -3,7 +3,7 @@ import { connectDB } from "@/lib/databaseConnection";
 import { catchError, response } from "@/lib/helperFunction";
 import ProductModel from "@/models/Product.model";
 import { NextResponse } from "next/server";
-import { regex } from "zod";
+
 
 export async function GET(request) {
   try {
@@ -38,45 +38,21 @@ export async function GET(request) {
         { name: { $regex: globalFilter, $options: "i" } },
         { slug: { $regex: globalFilter, $options: "i" } },
         { "categoryData.name": { $regex: globalFilter, $options: "i" } },
-        {
-            $expr:{
-                $regexMatch:{
-                    input:{$toString : "$mrp"},
-                    regex:globalFilter,
-                    options:'i'
-                }
-            }
-        },
-        {
-            $expr:{
-                $regexMatch:{
-                    input:{$toString : "$sellingPrice"},
-                    regex:globalFilter,
-                    options:'i'
-                }
-            }
-        },
-        {
-            $expr:{
-                $regexMatch:{
-                    input:{$toString : "$discountPercentage"},
-                    regex:globalFilter,
-                    options:'i'
-                }
-            }
-        },
+        { brand: { $regex: globalFilter, $options: "i" } },
+        { productType: { $regex: globalFilter, $options: "i" } },
+        { usageInstructions: { $regex: globalFilter, $options: "i" } },
+        { usageInstructions: { $regex: globalFilter, $options: "i" } },
+        { material: { $regex: globalFilter, $options: "i" } },
+        { ageGroup: { $regex: globalFilter, $options: "i" } },
+        { status: { $regex: globalFilter, $options: "i" } },
+        { warranty: { $regex: globalFilter, $options: "i" } },
+        
       ];
     }
 
     // column filteration
     filters.forEach((filter) => {
-
-    if(filter.id==='mrp' || filter.id==='sellingPrice' || filter.id==='discountPercentage'){
-        matchQuery[filter.id] =Number(filter.value)
-
-    }else{
         matchQuery[filter.id] = { $regex: filter.value, $options: "i" };
-    }
       
     });
 
@@ -111,10 +87,14 @@ export async function GET(request) {
           _id: 1,
           name: 1,
           slug: 1,
-          mrp: 1,
-          sellingPrice: 1,
-          discountPercentage: 1,
           category: "$categoryData.name",
+          brand: 1,
+          productType: 1,
+          usageInstructions: 1,
+          material: 1,
+          ageGroup: 1,
+          status: 1,
+          warranty: 1,
           createdAt: 1,
           updatedAt: 1,
           deletedAt: 1,

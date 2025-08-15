@@ -22,9 +22,7 @@ import axios from "axios";
 import useFetch from "@/hooks/useFetch";
 import Select from "@/components/Application/Select";
 import Editor from "@/components/Application/Admin/Editor";
-import MediaModal from "@/components/Application/Admin/MediaModal";
-import Image from "next/image";
-
+import { status } from "@/lib/productStatus";
 
 const breadcrumbData = [
   { href: ADMIN_DASHBOARD, label: "Home" },
@@ -32,80 +30,78 @@ const breadcrumbData = [
   { href: "", label: "Edit Product" },
 ];
 
-const EditProduct = ({params}) => {
-
-  const {id}=use(params)
+const EditProduct = ({ params }) => {
+  const { id } = use(params);
 
   const [loading, setLoading] = useState(false);
-  const [categoryOption,setCategoryOption]=useState([])
-  const {data:getCategory}=useFetch('/api/category?deleteType=SD&&size=10000')
-  const {data:getProduct , loading:getProductLoading}=useFetch(`/api/product/get/${id}`)
+  const [categoryOption, setCategoryOption] = useState([]);
+  const { data: getCategory } = useFetch(
+    "/api/category?deleteType=SD&&size=10000"
+  );
+  const { data: getProduct, loading: getProductLoading } = useFetch(
+    `/api/product/get/${id}`
+  );
 
-// Media modal states
-const [open,setOpen]=useState(false)
-const [selectedMedia,setSelectedMedia]=useState([])
-
-
-
-
-  useEffect(()=>{
-
-    if(getCategory && getCategory.success){
-      const data=getCategory.data
-      const options=data.map((cat)=>({label:cat.name , value:cat._id}))
-      setCategoryOption(options)
+  useEffect(() => {
+    if (getCategory && getCategory.success) {
+      const data = getCategory.data;
+      const options = data.map((cat) => ({ label: cat.name, value: cat._id }));
+      setCategoryOption(options);
     }
-
-
-  },[getCategory])
+  }, [getCategory]);
 
   const formSchema = zSchema.pick({
-    _id:true,
+    _id: true,
     name: true,
     slug: true,
     category: true,
-    mrp: true,
-    sellingPrice: true,
-    discountPercentage: true,
+    brand: true,
+    productType: true,
+    usageInstructions: true,
+    material: true,
+    ageGroup: true,
     description: true,
+    status: true,
+    warranty: true,
   });
 
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      _id:id,
+      _id: id,
       name: "",
       slug: "",
       category: "",
-      mrp: "",
-      sellingPrice: "",
-      discountPercentage: "",
+      brand: "",
+      productType: "",
+      usageInstructions: "",
+      material: "",
+      ageGroup: "",
       description: "",
+      status: "",
+      warranty: "",
     },
   });
 
-  useEffect(()=>{
-    if(getProduct && getProduct.success){
-      const product=getProduct.data
+  useEffect(() => {
+    if (getProduct && getProduct.success) {
+      const product = getProduct.data;
       form.reset({
-      _id: product?._id,
-      name: product?.name,
-      slug: product?.slug,
-      category: product?.category,
-      mrp: product?.mrp,
-      sellingPrice: product?.sellingPrice,
-      discountPercentage: product?.discountPercentage,
-      description: product?.description,
-
-
-      })
-      if(product.media){
-         const media=product.media.map((media)=>({_id:media._id,url:media.secure_url}))
-         setSelectedMedia(media)
-      }
-
+        _id: product?._id,
+        name: product?.name,
+        slug: product?.slug,
+        category: product?.category,
+        brand: product?.brand,
+        productType: product?.productType,
+        usageInstructions: product?.usageInstructions,
+        material: product?.material,
+        ageGroup: product?.ageGroup,
+        description: product?.description,
+        status: product?.status,
+        warranty: product?.warranty,
+      });
     }
-  },[getProduct])
+  }, [getProduct]);
 
   useEffect(() => {
     const name = form.getValues("name");
@@ -114,49 +110,19 @@ const [selectedMedia,setSelectedMedia]=useState([])
     }
   }, [form.watch("name")]);
 
-  // calculate discountPercentage
-
-useEffect(()=>{
-  const mrp=form.getValues('mrp') || 0
-  const sellingPrice=form.getValues('sellingPrice') || 0
-  if(mrp>0 && sellingPrice>0){
-    const discountPercentage=((mrp-sellingPrice)/mrp)*100
-  form.setValue('discountPercentage',Math.round(discountPercentage))
-  }
-  
-
-},[form.watch('mrp'),form.watch('sellingPrice')])
-
-
-
-  const editor=(event,editor)=>{
-      const data=editor.getData()
-      form.setValue('description',data)
-  }
-
-
-
+  const editor = (event, editor) => {
+    const data = editor.getData();
+    form.setValue("description", data);
+  };
 
   const onSubmit = async (values) => {
     setLoading(true);
     try {
-
-      if(selectedMedia.length<=0){
-        return showToast('error','Please select media.')
-      }
-
-      const mediaIds=selectedMedia.map(media=>media._id)
-      values.media=mediaIds
-
-      const { data: response } = await axios.put(
-        "/api/product/update",
-        values
-      );
+      const { data: response } = await axios.put("/api/product/update", values);
       if (!response.success) {
         throw new Error(response.message);
       }
 
-     
       showToast("success", response.message);
     } catch (error) {
       showToast("error", error.message);
@@ -176,199 +142,243 @@ useEffect(()=>{
 
         <CardContent className="pb-5">
           <Form {...form}>
-            <form
-              onSubmit={form.handleSubmit(onSubmit)}
-            >
+            <form onSubmit={form.handleSubmit(onSubmit)}>
               <div className="grid md:grid-cols-2 grid-cols-1 gap-5">
-              <div className="">
-                <FormField
-                  control={form.control}
-                  name="name"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>
-                        Product Name <span className="text-red-500">*</span>{" "}
-                      </FormLabel>
-                      <FormControl>
-                        <Input
-                          type="text"
-                          placeholder="Enter Product name"
-                          {...field}
-                        />
-                      </FormControl>
+                <div className="">
+                  <FormField
+                    control={form.control}
+                    name="name"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>
+                          Product Name <span className="text-red-500">*</span>{" "}
+                        </FormLabel>
+                        <FormControl>
+                          <Input
+                            type="text"
+                            placeholder="Enter Product name"
+                            {...field}
+                          />
+                        </FormControl>
 
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </div>
-
-              <div className="">
-                <FormField
-                  control={form.control}
-                  name="slug"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>
-                        Slug <span className="text-red-500">*</span>
-                      </FormLabel>
-                      <FormControl>
-                        <Input
-                          type="text"
-                          placeholder="Enter Slug."
-                          {...field}
-                        />
-                      </FormControl>
-
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </div>
-
-               <div className="">
-                <FormField
-                  control={form.control}
-                  name="category"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>
-                        Product Category <span className="text-red-500">*</span>
-                      </FormLabel>
-                      <FormControl>
-                        <Select
-                        options={categoryOption}
-                        selected={field.value}
-                        setSelected={field.onChange}
-                        isMulti={false}
-                        />
-                      </FormControl>
-
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </div>
-
-              <div className="">
-                <FormField
-                  control={form.control}
-                  name="mrp"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>
-                        MRP <span className="text-red-500">*</span>
-                      </FormLabel>
-                      <FormControl>
-                        <Input
-                          type="number"
-                          placeholder="Enter MRP"
-                          {...field}
-                        />
-                      </FormControl>
-
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </div>
-
-              <div className="">
-                <FormField
-                  control={form.control}
-                  name="sellingPrice"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>
-                        Selling Price <span className="text-red-500">*</span>
-                      </FormLabel>
-                      <FormControl>
-                        <Input
-                          type="number"
-                          placeholder="Enter Selling Price."
-                          {...field}
-                        />
-                      </FormControl>
-
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </div>
-
-              <div className="">
-                <FormField
-                  control={form.control}
-                  name="discountPercentage"
-                  
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>
-                        Discount Percentage{" "}
-                        <span className="text-red-500">*</span>
-                      </FormLabel>
-                      <FormControl>
-                        <Input
-                          type="number"
-                          readOnly
-                          placeholder="Enter discount percentage."
-                          {...field}
-                        />
-                      </FormControl>
-
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </div>
-
-              <div className="mb-5 md:col-span-2">
-                <FormLabel className="mb-2">Description<span className="text-red-500">*</span></FormLabel>
-                
-                {
-                  !getProductLoading &&
-                  <Editor onChange={editor} initialData={form.getValues('description')} />
-                }
-                
-
-                <FormMessage></FormMessage>
-              </div>
-
-              </div>
-
-              <div className="md:col-span-2 border border-dashed rounded p-5 text-center">
-                <MediaModal
-                  open={open}
-                  setOpen={setOpen}
-                  selectedMedia={selectedMedia}
-                  setSelectedMedia={setSelectedMedia}
-                  isMultiple={true}
-                />
-
-                {
-                  selectedMedia.length>0 
-                  &&
-                  <div className="flex justify-center items-center flex-wrap mb-3 gap-2">
-                    {selectedMedia.map(media =>(
-                      <div key={media._id} className="h-24 w-24 border">
-                        <Image 
-                        src={media.url}
-                        height={100}
-                        width={100}
-                        alt=""
-                        className="size-full object-cover"
-                      
-                        />
-                      </div>
-                    ))}
-                  </div>
-                }
-
-                <div onClick={()=>setOpen(true)} className="bg-gray-50 dark:bg-card border w-[200px] mx-auto p-5 cursor-pointer">
-                    <span className="font-semibold">Select Media</span>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
                 </div>
 
+                <div className="">
+                  <FormField
+                    control={form.control}
+                    name="slug"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>
+                          Slug <span className="text-red-500">*</span>
+                        </FormLabel>
+                        <FormControl>
+                          <Input
+                            type="text"
+                            placeholder="Enter Slug."
+                            {...field}
+                          />
+                        </FormControl>
 
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+
+                <div className="">
+                  <FormField
+                    control={form.control}
+                    name="category"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>
+                          Product Category{" "}
+                          <span className="text-red-500">*</span>
+                        </FormLabel>
+                        <FormControl>
+                          <Select
+                            options={categoryOption}
+                            selected={field.value}
+                            setSelected={field.onChange}
+                            isMulti={false}
+                          />
+                        </FormControl>
+
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+
+                <div className="">
+                  <FormField
+                    control={form.control}
+                    name="brand"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Brand</FormLabel>
+                        <FormControl>
+                          <Input
+                            type="text"
+                            placeholder="Enter Brand"
+                            {...field}
+                          />
+                        </FormControl>
+
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+
+                <div className="">
+                  <FormField
+                    control={form.control}
+                    name="productType"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Product Type</FormLabel>
+                        <FormControl>
+                          <Input
+                            type="text"
+                            placeholder="Enter Product Type"
+                            {...field}
+                          />
+                        </FormControl>
+
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+
+                <div className="">
+                  <FormField
+                    control={form.control}
+                    name="usageInstructions"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Usage Instructions</FormLabel>
+                        <FormControl>
+                          <Input
+                            type="text"
+                            placeholder="Enter Usage Instructions."
+                            {...field}
+                          />
+                        </FormControl>
+
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+
+                <div className="">
+                  <FormField
+                    control={form.control}
+                    name="material"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Material</FormLabel>
+                        <FormControl>
+                          <Input
+                            type="text"
+                            placeholder="Enter Material"
+                            {...field}
+                          />
+                        </FormControl>
+
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+
+                <div className="">
+                  <FormField
+                    control={form.control}
+                    name="ageGroup"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Age Group</FormLabel>
+                        <FormControl>
+                          <Input
+                            type="text"
+                            placeholder="Enter Age Group"
+                            {...field}
+                          />
+                        </FormControl>
+
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+
+                <div className="">
+                  <FormField
+                    control={form.control}
+                    name="status"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>
+                          Status <span className="text-red-500">*</span>
+                        </FormLabel>
+                        <FormControl>
+                          <Select
+                            options={status}
+                            selected={field.value}
+                            setSelected={field.onChange}
+                            isMulti={false}
+                          />
+                        </FormControl>
+
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+
+                <div className="">
+                  <FormField
+                    control={form.control}
+                    name="warranty"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Warranty</FormLabel>
+                        <FormControl>
+                          <Input
+                            type="text"
+                            placeholder="Enter Warranty"
+                            {...field}
+                          />
+                        </FormControl>
+
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+
+                <div className="mb-5 md:col-span-2">
+                  <FormLabel className="mb-2">
+                    Description<span className="text-red-500">*</span>
+                  </FormLabel>
+
+                  {!getProductLoading && (
+                    <Editor
+                      onChange={editor}
+                      initialData={form.getValues("description")}
+                    />
+                  )}
+
+                  <FormMessage></FormMessage>
+                </div>
               </div>
 
               <div className="mb-3 mt-5">

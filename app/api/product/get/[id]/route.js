@@ -1,7 +1,6 @@
 import { isAuthenticated } from "@/lib/authentication";
 import { connectDB } from "@/lib/databaseConnection";
 import { catchError, response } from "@/lib/helperFunction";
-import MediaModel from "@/models/Media.model";
 import ProductModel from "@/models/Product.model";
 import { isValidObjectId } from "mongoose";
 
@@ -29,7 +28,7 @@ export async function GET(request,{params}) {
 
         filter._id=id
 
-        const getProduct=await ProductModel.findOne(filter).populate('media','_id secure_url').lean()
+        const getProduct=await ProductModel.findOne(filter).populate('_id').lean()
 
         if(!getProduct){
             return response(false,404,"Product not found.")

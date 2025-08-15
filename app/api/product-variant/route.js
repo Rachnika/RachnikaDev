@@ -37,50 +37,106 @@ export async function GET(request) {
         { color: { $regex: globalFilter, $options: "i" } },
         { size: { $regex: globalFilter, $options: "i" } },
         { sku: { $regex: globalFilter, $options: "i" } },
+        { pattern: { $regex: globalFilter, $options: "i" } },
+        { quantityVolume: { $regex: globalFilter, $options: "i" } },
+        { weight: { $regex: globalFilter, $options: "i" } },
+        { hsnCode: { $regex: globalFilter, $options: "i" } },
+        { stockStatus: { $regex: globalFilter, $options: "i" } },
+        { deliveryTime: { $regex: globalFilter, $options: "i" } },
+        { returnPolicy: { $regex: globalFilter, $options: "i" } },
         { "productData.name": { $regex: globalFilter, $options: "i" } },
         {
-            $expr:{
-                $regexMatch:{
-                    input:{$toString : "$mrp"},
-                    regex:globalFilter,
-                    options:'i'
-                }
-            }
+          $expr: {
+            $regexMatch: {
+              input: { $toString: "$mrp" },
+              regex: globalFilter,
+              options: "i",
+            },
+          },
         },
         {
-            $expr:{
-                $regexMatch:{
-                    input:{$toString : "$sellingPrice"},
-                    regex:globalFilter,
-                    options:'i'
-                }
-            }
+          $expr: {
+            $regexMatch: {
+              input: { $toString: "$sellingPrice" },
+              regex: globalFilter,
+              options: "i",
+            },
+          },
         },
         {
-            $expr:{
-                $regexMatch:{
-                    input:{$toString : "$discountPercentage"},
-                    regex:globalFilter,
-                    options:'i'
-                }
-            }
+          $expr: {
+            $regexMatch: {
+              input: { $toString: "$discountPercent" },
+              regex: globalFilter,
+              options: "i",
+            },
+          },
+        },
+        {
+          $expr: {
+            $regexMatch: {
+              input: { $toString: "$discountAmount" },
+              regex: globalFilter,
+              options: "i",
+            },
+          },
+        },
+        {
+          $expr: {
+            $regexMatch: {
+              input: { $toString: "$shippingCharges" },
+              regex: globalFilter,
+              options: "i",
+            },
+          },
+        },
+        {
+          $expr: {
+            $regexMatch: {
+              input: { $toString: "$minOrderQty" },
+              regex: globalFilter,
+              options: "i",
+            },
+          },
+        },
+        {
+          $expr: {
+            $regexMatch: {
+              input: { $toString: "$stockQuantity" },
+              regex: globalFilter,
+              options: "i",
+            },
+          },
+        },
+        {
+          $expr: {
+            $regexMatch: {
+              input: { $toString: "$taxPercent" },
+              regex: globalFilter,
+              options: "i",
+            },
+          },
         },
       ];
     }
 
     // column filteration
     filters.forEach((filter) => {
-
-    if(filter.id==='mrp' || filter.id==='sellingPrice' || filter.id==='discountPercentage'){
-        matchQuery[filter.id] =Number(filter.value)
-
-    }else if(filter.id==='product'){
-      matchQuery[productData.name] ={ $regex: filter.value, $options: "i" };
-    }
-    else{
+      if (
+        filter.id === "mrp" ||
+        filter.id === "sellingPrice" ||
+        filter.id === "discountPercent" ||
+        filter.id === "shippingCharges" ||
+        filter.id === "minOrderQty" ||
+        filter.id === "tockQuantity" ||
+        filter.id === "taxPercent"
+      ) {
+        matchQuery[filter.id] = Number(filter.value);
+      } else if (filter.id === "product") {
+        matchQuery[productData.name] = { $regex: filter.value, $options: "i" };
+      } else {
         matchQuery[filter.id] = { $regex: filter.value, $options: "i" };
-    }
-      
+      }
     });
 
     // sorting
@@ -117,8 +173,21 @@ export async function GET(request) {
           size: 1,
           sku: 1,
           mrp: 1,
+          pattern: 1,
+          quantityVolume: 1,
+          weight: 1,
+          discountAmount: 1,
+          taxPercent: 1,
+          hsnCode: 1,
+          stockQuantity: 1,
+          stockStatus: 1,
+          minOrderQty: 1,
+          shippingCharges: 1,
+          deliveryTime: 1,
+          returnPolicy: 1,
+
           sellingPrice: 1,
-          discountPercentage: 1,
+          discountPercent: 1,
           createdAt: 1,
           updatedAt: 1,
           deletedAt: 1,
@@ -127,7 +196,9 @@ export async function GET(request) {
     ];
 
     // execute query
-    const getProductVariant = await ProductVariantModel.aggregate(aggregatePipeline);
+    const getProductVariant = await ProductVariantModel.aggregate(
+      aggregatePipeline
+    );
 
     // get total row
     const totalRowCount = await ProductVariantModel.countDocuments(matchQuery);

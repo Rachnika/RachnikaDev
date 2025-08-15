@@ -20,7 +20,7 @@ export async function GET(request) {
             deletedAt:null
         }
 
-        const getProduct=await ProductModel.find(filter).select('-media -description').sort({createdAt:-1}).lean()
+        const getProduct=await ProductModel.find(filter).select('-description').sort({createdAt:-1}).lean()
 
         if(!getProduct){
             return response(false,404,"Data not found.")
