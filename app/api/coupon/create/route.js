@@ -18,7 +18,7 @@ export async function POST(request) {
     const payload=await request.json()
     const schema = zSchema.pick({
     code:true,
-    discountPercentage: true,
+    discountPercent: true,
     minShoppingAmount:true,
     validity:true
   });
@@ -33,7 +33,7 @@ export async function POST(request) {
 
       const newCoupon=new CouponModel({
     code: couponData.code,
-    discountPercentage: couponData.discountPercentage,
+    discountPercent: couponData.discountPercent,
     minShoppingAmount: couponData.minShoppingAmount,
     validity: couponData.validity,
     

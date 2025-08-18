@@ -3,7 +3,7 @@ import { connectDB } from "@/lib/databaseConnection";
 import { catchError, response } from "@/lib/helperFunction";
 import CouponModel from "@/models/Coupon.model";
 import { NextResponse } from "next/server";
-import { regex } from "zod";
+
 
 export async function GET(request) {
   try {
@@ -49,7 +49,7 @@ export async function GET(request) {
         {
             $expr:{
                 $regexMatch:{
-                    input:{$toString : "$discountPercentage"},
+                    input:{$toString : "$discountPercent"},
                     regex:globalFilter,
                     options:'i'
                 }
@@ -61,7 +61,7 @@ export async function GET(request) {
     // column filteration
     filters.forEach((filter) => {
 
-    if(filter.id==='minShoppingAmount' || filter.id==='discountPercentage'){
+    if(filter.id==='minShoppingAmount' || filter.id==='discountPercent'){
         matchQuery[filter.id] =Number(filter.value)
 
     }else if(filter.id==='validity'){
@@ -90,7 +90,7 @@ export async function GET(request) {
         $project: {
           _id: 1,
           code: 1,
-          discountPercentage: 1,
+          discountPercent: 1,
           minShoppingAmount: 1,
           validity: 1,          
           createdAt: 1,

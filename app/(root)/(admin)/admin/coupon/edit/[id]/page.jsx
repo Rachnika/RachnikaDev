@@ -40,7 +40,7 @@ const EditCoupon = ({params}) => {
   const formSchema = zSchema.pick({
     _id:true,
     code:true,
-    discountPercentage: true,
+    discountPercent: true,
     minShoppingAmount:true,
     validity:true
   });
@@ -50,7 +50,7 @@ const EditCoupon = ({params}) => {
     defaultValues: {
       _id:id,
       code: "",
-      discountPercentage: "",
+      discountPercent: "",
       minShoppingAmount: "",
       validity: "",
       
@@ -65,7 +65,7 @@ const EditCoupon = ({params}) => {
       form.reset({
         _id:coupon._id,
         code:coupon.code,
-        discountPercentage:coupon.discountPercentage,
+        discountPercent:coupon.discountPercent,
         minShoppingAmount:coupon.minShoppingAmount,
         validity:dayjs(coupon.validity).format('YYYY-MM-DD'),
 
@@ -137,19 +137,25 @@ const EditCoupon = ({params}) => {
               <div className="">
                 <FormField
                   control={form.control}
-                  name="discountPercentage"
+                  name="discountPercent"
                   
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>
-                        Discount Percentage{" "}
+                        Discount Percent{" "}
                         <span className="text-red-500">*</span>
                       </FormLabel>
                       <FormControl>
                         <Input
                           type="number"
-                          placeholder="Enter discount percentage."
+                          placeholder="Enter discount percent."
                           {...field}
+                          onChange={(e) => {
+                              const val = e.target.value;
+                              field.onChange(
+                                val === "" ? "" : e.target.valueAsNumber
+                              );
+                            }}
                         />
                       </FormControl>
 

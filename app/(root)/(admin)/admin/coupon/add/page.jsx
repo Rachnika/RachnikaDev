@@ -38,7 +38,7 @@ const AddCoupon = () => {
   
   const formSchema = zSchema.pick({
     code:true,
-    discountPercentage: true,
+    discountPercent: true,
     minShoppingAmount:true,
     validity:true
   });
@@ -47,7 +47,7 @@ const AddCoupon = () => {
     resolver: zodResolver(formSchema),
     defaultValues: {
       code: "",
-      discountPercentage: "",
+      discountPercent: "",
       minShoppingAmount: "",
       validity: "",
       
@@ -119,19 +119,26 @@ const AddCoupon = () => {
               <div className="">
                 <FormField
                   control={form.control}
-                  name="discountPercentage"
+                  name="discountPercent"
                   
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>
-                        Discount Percentage{" "}
+                        Discount Percent{" "}
                         <span className="text-red-500">*</span>
                       </FormLabel>
                       <FormControl>
                         <Input
                           type="number"
-                          placeholder="Enter discount percentage."
+                          placeholder="Enter discount percent."
                           {...field}
+
+                          onChange={(e) => {
+                              const val = e.target.value;
+                              field.onChange(
+                                val === "" ? "" : e.target.valueAsNumber
+                              );
+                            }}
                         />
                       </FormControl>
 

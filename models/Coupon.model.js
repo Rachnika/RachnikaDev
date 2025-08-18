@@ -10,7 +10,7 @@ const couponSchema = new mongoose.Schema({
         unique:true,
         trim:true
     },
-    discountPercentage:{
+    discountPercent:{
         type:Number,
         required:true,
         trim:true
