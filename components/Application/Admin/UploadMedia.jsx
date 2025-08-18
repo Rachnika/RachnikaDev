@@ -1,11 +1,15 @@
 "use client";
 import { Button } from '@/components/ui/button';
 import { showToast } from '@/lib/showToast';
+//import { useQueryClient } from '@tanstack/react-query';
 import axios from 'axios';
 import { CldUploadWidget } from 'next-cloudinary';
 import { FiPlus } from "react-icons/fi";
+const FALLBACK_IMAGE = "/images/img-placeholder.webp"; // make sure you add a placeholder.png in /public
 
-const UploadMedia = ({isMultiple,queryClient}) => {
+const UploadMedia = ({isMultiple=true,onUploaded,queryClient}) => {
+
+    //const queryClient = useQueryClient(); // ✅ get queryClient directly
 
     const handleOnError=(error)=>{
         showToast("error",error.statusText)
@@ -33,9 +37,13 @@ const UploadMedia = ({isMultiple,queryClient}) => {
                 if(!mediaUploadResponse.success){
                     throw new Error(mediaUploadResponse.message)
                 }
-
+                 // ✅ invalidate media query so gallery updates
                 queryClient.invalidateQueries(['media-data'])
                 showToast('success',mediaUploadResponse.message)
+
+                if (onUploaded) {
+          onUploaded(mediaUploadResponse.data);
+                 } // assuming API returns inserted media
                 
             } catch (error) {
                 showToast('error',error.message)
@@ -78,5 +86,17 @@ const UploadMedia = ({isMultiple,queryClient}) => {
     </CldUploadWidget>
   )
 }
+
+
+// ✅ SafeImage wrapper to avoid "empty src" errors everywhere
+export const SafeImage = ({ src, alt = "image", ...props }) => {
+  return (
+    <Image
+      src={src && src.trim() !== "" ? src : FALLBACK_IMAGE}
+      alt={alt}
+      {...props}
+    />
+  );
+};
 
 export default UploadMedia

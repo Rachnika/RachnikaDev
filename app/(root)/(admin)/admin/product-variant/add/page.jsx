@@ -27,6 +27,8 @@ import MediaModal from "@/components/Application/Admin/MediaModal";
 import Image from "next/image";
 import { sizes } from "@/lib/productSize";
 import { stockStatus } from "@/lib/stockStatus";
+import UploadMedia from "@/components/Application/Admin/UploadMedia";
+import { useQueryClient } from "@tanstack/react-query";
 
 const breadcrumbData = [
   { href: ADMIN_DASHBOARD, label: "Home" },
@@ -44,6 +46,8 @@ const AddProductVariant = () => {
   // Media modal states
   const [open, setOpen] = useState(false);
   const [selectedMedia, setSelectedMedia] = useState([]);
+  const [deleteType, setDeleteType] = useState("SD");
+  const queryClient = useQueryClient();
 
   useEffect(() => {
     if (getProduct && getProduct.success) {
@@ -632,10 +636,10 @@ const AddProductVariant = () => {
                     {selectedMedia.map((media) => (
                       <div key={media._id} className="h-24 w-24 border">
                         <Image
-                          src={media.url}
+                          src={media.url || "/images/img-placeholder.webp"}
                           height={100}
                           width={100}
-                          alt=""
+                          alt="uploaded"
                           className="size-full object-cover"
                         />
                       </div>
@@ -643,13 +647,32 @@ const AddProductVariant = () => {
                   </div>
                 )}
 
+
+                {/* Select media button */}
                 <div
                   onClick={() => setOpen(true)}
                   className="bg-gray-50 dark:bg-card border w-[200px] mx-auto p-5 cursor-pointer"
                 >
                   <span className="font-semibold">Select Media</span>
                 </div>
+
+               {/* Upload and auto-select new media */}
+                <div className="flex justify-center items-center pt-4">
+                  {deleteType === 'SD' && 
+                <UploadMedia dMedia
+                  isMultiple={true}
+                  onUploaded={(newMedia) => {
+                    // auto-select newly uploaded media
+                  setSelectedMedia((prev) => [...prev, ...newMedia]);
+  
+                  }}
+                  queryClient={queryClient}
+                /> }
+                </div>
+
               </div>
+
+              
 
               <div className="mb-3 mt-5">
                 <ButtonLoading
