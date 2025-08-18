@@ -647,7 +647,6 @@ const AddProductVariant = () => {
                   </div>
                 )}
 
-
                 {/* Select media button */}
                 <div
                   onClick={() => setOpen(true)}
@@ -656,23 +655,21 @@ const AddProductVariant = () => {
                   <span className="font-semibold">Select Media</span>
                 </div>
 
-               {/* Upload and auto-select new media */}
+                {/* Upload and auto-select new media */}
                 <div className="flex justify-center items-center pt-4">
-                  {deleteType === 'SD' && 
-                <UploadMedia dMedia
-                  isMultiple={true}
-                  onUploaded={(newMedia) => {
-                    // auto-select newly uploaded media
-                  setSelectedMedia((prev) => [...prev, ...newMedia]);
-  
-                  }}
-                  queryClient={queryClient}
-                /> }
+                  {deleteType === "SD" && (
+                    <UploadMedia
+                      dMedia
+                      isMultiple={true}
+                      onUploaded={(newMedia) => {
+                        // auto-select newly uploaded media
+                        setSelectedMedia((prev) => [...prev, ...newMedia]);
+                      }}
+                      queryClient={queryClient}
+                    />
+                  )}
                 </div>
-
               </div>
-
-              
 
               <div className="mb-3 mt-5">
                 <ButtonLoading
