@@ -2,6 +2,9 @@
 import Link from "next/link";
 import Logo from "./Logo";
 import { ABOUTUS, CONTACT, COOKIE_POLICY, FAQS, PRIVACY_POLICY, RETURN_REFUND_POLICY, SHIPPING_POLICY, TERM_CONDITION, WEBSITE_LOGIN, WEBSITE_REGISTER } from "@/routes/WebsiteRoute";
+import SocialMediaAccount from "./SocialMediaAccount";
+
+
 
 const Footer = () => {
   return (
@@ -12,9 +15,9 @@ const Footer = () => {
           <Logo/>
           <p className="text-gray-500 text-sm text-justify leading-relaxed">
             Rachnika is your trusted destination for creative, quality, and
-            affordable products. From lifestyle to gifting, we bring innovation
+             affordable products. {/*From lifestyle to gifting, we bring innovation
             and joy to every purchase. Discover meaningful choices with Rachnika
-            – where customer happiness always comes first.
+            – where customer happiness always comes first. */}
           </p>
         </div>
 
@@ -70,7 +73,16 @@ const Footer = () => {
             <li className="hover:text-primary hover:font-semibold"><Link href={TERM_CONDITION}>Terms & Conditions</Link></li>
             <li className="hover:text-primary hover:font-semibold"><Link href={COOKIE_POLICY}>Cookie Policy</Link></li>
           </ul>
+
+          <SocialMediaAccount /> 
         </div>
+
+        
+        
+      </div>
+
+      <div className="py-2 bg-gray-100">
+        <p className="text-center">© {new Date().getFullYear()} Rachnika. All rights reserved.</p>
       </div>
     </footer>
   );
